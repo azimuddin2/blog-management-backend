@@ -3,7 +3,8 @@ import sendResponse from '../../utils/sendResponse';
 import { BlogServices } from './blog.service';
 
 const createBlog = catchAsync(async (req, res) => {
-  const result = await BlogServices.createBlogIntoDB(req.body);
+  const { id } = req.user;
+  const result = await BlogServices.createBlogIntoDB(req.body, id);
 
   sendResponse(res, {
     statusCode: 201,
@@ -14,7 +15,6 @@ const createBlog = catchAsync(async (req, res) => {
 });
 
 const getAllBlogs = catchAsync(async (req, res) => {
-  console.log('Test', req.user);
   const result = await BlogServices.getAllBlogsFromDB();
 
   sendResponse(res, {

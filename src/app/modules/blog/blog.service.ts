@@ -2,13 +2,18 @@ import AppError from '../../errors/AppError';
 import { TBlog } from './blog.interface';
 import { Blog } from './blog.model';
 
-const createBlogIntoDB = async (payload: TBlog) => {
-  const result = await Blog.create(payload);
+const createBlogIntoDB = async (payload: TBlog, authorId: string) => {
+  const newBlog = {
+    title: payload.title,
+    content: payload.content,
+    author: authorId,
+  };
+  const result = await Blog.create(newBlog);
   return result;
 };
 
 const getAllBlogsFromDB = async () => {
-  const result = await Blog.find();
+  const result = await Blog.find().populate('author').select('-password');
   return result;
 };
 

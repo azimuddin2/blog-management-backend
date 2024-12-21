@@ -7,30 +7,28 @@ import { TUserRole } from '../modules/auth/auth.interface';
 
 const auth = (...requiredRoles: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const token = req.headers.authorization;
-    if (!token) {
+    const authHeader = req.headers.authorization;
+
+    // Check if the Authorization header exists
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
       throw new AppError(401, 'You are not authorized!');
     }
 
-    // check if the token is valid
-    jwt.verify(
+    const token = authHeader.split(' ')[1];
+
+    // checking if the token is valid
+    const decoded = jwt.verify(
       token,
       config.jwt_access_secret as string,
-      function (err, decoded) {
-        if (err) {
-          throw new AppError(401, 'You are not authorized!');
-        }
+    ) as JwtPayload;
+    const role = decoded.role;
 
-        const role = (decoded as JwtPayload).role;
+    if (requiredRoles && !requiredRoles.includes(role)) {
+      throw new AppError(401, 'You are not authorized!');
+    }
 
-        if (requiredRoles && !requiredRoles.includes(role)) {
-          throw new AppError(401, 'You are not authorized!');
-        }
-
-        req.user = decoded as JwtPayload;
-        next();
-      },
-    );
+    req.user = decoded as JwtPayload;
+    next();
   });
 };
 
