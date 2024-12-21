@@ -1,5 +1,6 @@
 import { model, Schema } from 'mongoose';
 import { TBlog } from './blog.interface';
+import AppError from '../../errors/AppError';
 
 const blogSchema = new Schema<TBlog>(
   {
@@ -35,5 +36,29 @@ const blogSchema = new Schema<TBlog>(
     timestamps: true,
   },
 );
+
+blogSchema.pre('findOneAndUpdate', async function (next) {
+  const query = this.getQuery();
+
+  const isBlogExist = await Blog.findOne(query);
+
+  if (!isBlogExist) {
+    throw new AppError(404, 'This blog does not exist!');
+  }
+
+  next();
+});
+
+blogSchema.pre('findOneAndDelete', async function (next) {
+  const query = this.getQuery();
+
+  const isBlogExist = await Blog.findOne(query);
+
+  if (!isBlogExist) {
+    throw new AppError(404, 'This blog does not exist!');
+  }
+
+  next();
+});
 
 export const Blog = model<TBlog>('Blog', blogSchema);
