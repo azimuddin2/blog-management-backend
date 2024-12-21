@@ -4,11 +4,18 @@ import { TBlog } from './blog.interface';
 import { Blog } from './blog.model';
 
 const createBlogIntoDB = async (payload: TBlog, authorId: string) => {
+  const filter = { title: payload.title };
+  const productExists = await Blog.findOne(filter);
+  if (productExists) {
+    throw new AppError(409, `${payload.title} already exists.`);
+  }
+
   const newBlog = {
     title: payload.title,
     content: payload.content,
     author: authorId,
   };
+
   const result = await Blog.create(newBlog);
   return result;
 };
@@ -25,7 +32,12 @@ const getAllBlogsFromDB = async (query: Record<string, unknown>) => {
 };
 
 const getSingleBlogFromDB = async (id: string) => {
-  const result = await Blog.findById(id);
+  const result = await Blog.findById(id).populate('author');
+
+  if (!result) {
+    throw new AppError(404, `This Blog id ${id} does not exists`);
+  }
+
   return result;
 };
 

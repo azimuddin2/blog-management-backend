@@ -6,6 +6,12 @@ import { Register } from './auth.model';
 import config from '../../config';
 
 const registerUser = async (payload: TRegisterUser) => {
+  const filter = { email: payload.email };
+  const userExists = await Register.findOne(filter);
+  if (userExists) {
+    throw new AppError(409, `${payload.email} already exists.`);
+  }
+
   const result = await Register.create(payload);
 
   return result;

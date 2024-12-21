@@ -13,13 +13,18 @@ router.post(
   validateRequest(BlogValidations.createBlogValidationSchema),
   BlogControllers.createBlog,
 );
+
 router.get('/', auth(USER_ROLE.user), BlogControllers.getAllBlogs);
-router.get('/:id', BlogControllers.getSingleBlog);
+
+router.get('/:id', auth(USER_ROLE.user), BlogControllers.getSingleBlog);
+
 router.patch(
   '/:id',
+  auth(USER_ROLE.user),
   validateRequest(BlogValidations.updateBlogValidationSchema),
   BlogControllers.updateBlog,
 );
-router.delete('/:id', BlogControllers.deleteBlog);
+
+router.delete('/:id', auth(USER_ROLE.user), BlogControllers.deleteBlog);
 
 export const BlogRoutes = router;

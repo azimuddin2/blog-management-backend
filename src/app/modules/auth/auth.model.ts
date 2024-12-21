@@ -31,7 +31,6 @@ const registerUserSchema = new Schema<TRegisterUser>(
       trim: true,
       minlength: [6, 'Password can be minimum 6 characters'],
       maxlength: [20, 'Password can not be more than 20 characters'],
-      select: 0,
     },
     role: {
       type: String,
@@ -64,11 +63,5 @@ registerUserSchema.post('save', function (doc, next) {
   doc.password = '';
   next();
 });
-
-registerUserSchema.statics.isUserExistsByCustomId = async function (
-  id: string,
-) {
-  return await Register.findOne({ id }).select('+password');
-};
 
 export const Register = model<TRegisterUser>('Register', registerUserSchema);
