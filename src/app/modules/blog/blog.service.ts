@@ -1,3 +1,4 @@
+import QueryBuilder from '../../builder/QueryBuilder';
 import AppError from '../../errors/AppError';
 import { TBlog } from './blog.interface';
 import { Blog } from './blog.model';
@@ -12,8 +13,14 @@ const createBlogIntoDB = async (payload: TBlog, authorId: string) => {
   return result;
 };
 
-const getAllBlogsFromDB = async () => {
-  const result = await Blog.find().populate('author').select('-password');
+const getAllBlogsFromDB = async (query: Record<string, unknown>) => {
+  const blogQuery = new QueryBuilder(Blog.find().populate('author'), query)
+    .search(['title', 'content'])
+    .filter()
+    .sortBy()
+    .paginate();
+
+  const result = await blogQuery.modelQuery;
   return result;
 };
 
