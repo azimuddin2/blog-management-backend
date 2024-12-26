@@ -6,6 +6,7 @@ import { Blog } from './blog.model';
 const createBlogIntoDB = async (payload: TBlog, authorId: string) => {
   const filter = { title: payload.title };
   const productExists = await Blog.findOne(filter);
+  
   if (productExists) {
     throw new AppError(409, `${payload.title} already exists.`);
   }
