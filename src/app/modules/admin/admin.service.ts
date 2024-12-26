@@ -3,7 +3,7 @@ import { Register } from '../auth/auth.model';
 import { Blog } from '../blog/blog.model';
 
 const blockUserFromDB = async (id: string) => {
-  const isUserExists = await Blog.findById(id);
+  const isUserExists = await Register.findById(id);
   if (!isUserExists) {
     throw new AppError(404, `This user id ${id} does not exists`);
   }

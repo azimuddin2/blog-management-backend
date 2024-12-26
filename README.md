@@ -22,22 +22,19 @@
 
 
 ✅ Auth API
-- 🔖 Auth interface - model and schema with validations for auth api
+- 🔖 Auth interface - schema and model with validations for auth api
     - create auth validation
     - create auth routes controller and service
 
  1. POST /api/auth/register ->  user register (D)
     - extract request body
     - check user existing
-    - compare the password & return response
-    - create jwt token with an expiry time   
 
 1. POST /api/auth/login -> user login (D)
     - middlewares: auth
     - extract request body
     - check user existing
     - compare the password & return response
-    - check user is banned & return response
     - create jwt token with an expiry time
 
 
@@ -70,7 +67,7 @@
     - send response based on Blog found or not
     - handle the mongoose Cast error
 
-5. PUT /api/Blogs/:id -> update the Blog (D)
+5. PATCH /api/Blogs/:id -> update the Blog (D)
     - get the data from request body and params
     - create filter, updates, options
     - findByIdAndUpdate(filter, updates, options)

@@ -2,8 +2,14 @@ import { z } from 'zod';
 
 const createBlogValidationSchema = z.object({
   body: z.object({
-    title: z.string().min(3).max(80),
-    content: z.string().min(5).max(1000),
+    title: z
+      .string({ required_error: 'Title is required' })
+      .min(3)
+      .max(80),
+    content: z
+    .string({required_error: 'Content is required'})
+    .min(5)
+    .max(1000),
     author: z.string().optional(),
     isPublished: z.boolean().default(true),
   }),
